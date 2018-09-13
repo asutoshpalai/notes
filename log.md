@@ -23,3 +23,9 @@
 
   $  socat FILE:`tty`,raw,echo=0 TCP:localhost:9001
 
+# To open a socks proxy on local with proxy chaining
+
+- Setup your proxychains config and run
+    [`srealy`](https://socks-relay.sourceforge.io/) under `proxychains` like
+
+      $ proxychains4 -f proxychains.conf srelay -f
