@@ -29,3 +29,16 @@
     [`srealy`](https://socks-relay.sourceforge.io/) under `proxychains` like
 
       $ proxychains4 -f proxychains.conf srelay -f
+
+# SMT solvers
+
+- online solver: <https://rise4fun.com/z3>
+- Nice intro: <https://yurichev.com/writings/SAT_SMT_by_example.pdf>
+
+# GUI from docker (on Mac)
+
+- Worked for me
+<https://fredrikaverpil.github.io/2016/07/31/docker-for-mac-and-gui-applications/>
+- From r2's cutter project I learned
+    <https://stackoverflow.com/questions/16296753/can-you-run-gui-apps-in-a-docker-container/25280523#25280523>.
+    Although I didn't test it.
