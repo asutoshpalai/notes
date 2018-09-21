@@ -42,3 +42,24 @@
 - From r2's cutter project I learned
     <https://stackoverflow.com/questions/16296753/can-you-run-gui-apps-in-a-docker-container/25280523#25280523>.
     Although I didn't test it.
+
+# Alpha numeric shellcode
+- <http://phrack.org/issues/57/15.html#article>
+- <http://julianor.tripod.com/bc/bypass-msb.txt>
+
+# Installing Red Hat Virtualization Manage Python SDK
+- The guide requires you to have a RHEL, closest you can get is spawn a CentOS
+    docker container
+- Apparently installing pip for CentOS is not that straight forward
+    <https://www.liquidweb.com/kb/how-to-install-pip-on-centos-7/>
+- Follow stuff from
+    <https://www.linuxtechi.com/install-configure-ovirt-4-0-on-centos7-rhel7/>
+    and
+    <https://www.ovirt.org/documentation/install-guide/chap-Installing_oVirt/>
+
+    - Basically instead of `subscription-manager repos
+        --enable=rhel-7-server-rhv-4.1-rpms` as per the SDK guide, you can do
+        `yum install
+        http://resources.ovirt.org/pub/yum-repo/ovirt-release41.rpm`
+- From <https://pypi.org/project/ovirt-engine-sdk-python/4.1.0/>, pip
+    install also works.
