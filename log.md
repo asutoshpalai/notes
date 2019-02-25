@@ -4,6 +4,16 @@
     "%0A" and "%3D%93".
 - Attaching VS to a process on startup: Gflags with debugger as
   c:\windows\system32\VSJitDebugger.exe
+- Messing around MacOS pkg files <https://stackoverflow.com/a/11299907>
+- RAM Disk on MacOS
+    https://web.archive.org/web/20160419023835/http://www.frederico-araujo.com/2008/12/18/blazing-fast-firefox-using-osx-ramdisk/
+- align multiple image based on common parts:
+    <https://photo.stackexchange.com/a/49597>
+
+- MacOS run a script as an App, use Automator -> Create Application -> Run a
+    script -> Input as arguements -> path to the scirpt/directly input the
+    script
+
 ### Usenet (apparently they still exist)
 
 - [Free Usenet (reddit.com)](https://www.reddit.com/r/usenet/comments/6l8h82/free_usenet/)
@@ -178,3 +188,59 @@
 										0xdeadbeef,
 						]
     ```
+
+# Ethereum
+
+- [Go Etherium](https://geth.ethereum.org/) can be used to set up a node
+- web3 clients can be used to communicate with the node through RPC
+- Contracts are programs whose functions can be called and they can have states
+    which can also change. I believe that for calling the functions that change
+    the states, you need to create a transaction.
+
+# PHP Sessions
+- Using `redis` store for session storage:
+    <https://www.digitalocean.com/community/tutorials/how-to-set-up-a-redis-server-as-a-session-handler-for-php-on-ubuntu-14-04>
+- Using Memcached <http://php.net/manual/en/memcached.sessions.php>
+- Sticky sessions at load balance, the load balancer forwards request to same
+    server depending upon the session.
+
+# Debugging binaries with differnt archs:
+- start the binary under QEMU like `qemu-arm -g 1735 -R 20M -L /usr/arm-linux-gnueabi/
+    ./binary`
+- This makes QEMU to pause till a gdb get attached to the port 1735
+- attach `gdb-multiarch` like `gdb-multiarch -q -x ~/.gdbinit-pwndbg ./target -ex
+    'target remote 127.0.0.1:1735' -ex 'b main' -ex 'c'`
+- Add the shared library paths to gdb using `sysroot`.
+
+# Running ARM ELF on a different architecture
+
+- To compile, first install `gcc-arm-linux-gnueabi`.
+- To run, install `qemu` and while running using `qemu-arm` provide the path to
+  libs like `qemu-arm -L /usr/arm-linux-gnueabi/ binary`
+
+# Debian/Ubuntu equivalanet of ABS (how debian pacakges are built)
+
+- There is a plugin for `bzr` which can be installed from apt which is used to
+  manage the packge building process and uploading it to launchpad. I am
+  guessing a software by name of `dh-build` helps in that. Details:
+  <http://packaging.ubuntu.com/html/packaging-new-software.html>
+- Things concering the building is a `debian` folder inside the source directory
+  which, more importantly the `control` and `rules` files, that describes the
+  building. More info at <https://askubuntu.com/a/17519> and
+  <https://stackoverflow.com/a/13517588>
+- Best thing of all, you can directly use apt-get to build from source! Damn,
+  imagine! 
+
+    $ apt-get -b source libc6
+
+- To add/change the compilation flags: <https://stackoverflow.com/a/11115046>
+
+# Debugging libc/ld (or any shared libaray) with source
+
+- <https://stackoverflow.com/a/29956038>
+- If the symbols are not getting loaded from `/usr/lib/dbg`, create a `.debug`
+    folder in the same dir from which the library is being loaded and place the
+    debug symbols file in it. E.g., for `/lib64/ld-linux-x86-64.so.2`, symlink
+    `/usr/lib/debug/lib/x86_64-linux-gnu/ld-2.27.so` to
+    `/lib64/.debug/ld-2.27.so`.
+
