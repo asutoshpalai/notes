@@ -122,3 +122,7 @@
     minimum one that starts very fast, starts the application and then gets out
     of the way. It may not be even required to boot, loading it from a image
     should work fine too.
+
+- Run linux as a process on macOS. There was a article on HN on how to run linux
+    as an application on Linux. Porting that may allow the above idea to be
+    fulfilled.

@@ -13,6 +13,12 @@
 - MacOS run a script as an App, use Automator -> Create Application -> Run a
     script -> Input as arguements -> path to the scirpt/directly input the
     script
+- Fixing Scaleway Ubuntu Kernel
+<https://blog.simos.info/how-to-run-the-stock-ubuntu-linux-kernel-on-scaleway-using-kexec-and-server-tags/>
+
+- "HowTo: Use Tor for all network traffic by default on Mac OS X"
+<https://maymay.net/blog/2013/02/20/howto-use-tor-for-all-network-traffic-by-default-on-mac-os-x/>
+- Poor man's SSH VPN <https://github.com/sshuttle/sshuttle>
 
 ### Usenet (apparently they still exist)
 
@@ -244,3 +250,53 @@
     `/usr/lib/debug/lib/x86_64-linux-gnu/ld-2.27.so` to
     `/lib64/.debug/ld-2.27.so`.
 
+# WiFi monitor mode on macOC
+
+- You need to dissociate from any AP before initiating the scanning:
+```
+sudo /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -z
+```
+
+- Open Wireshark, while selecting interface check the monitor mode checkbox and
+    start capturing.
+- The above command can also be used to switch channel with `-c` option, e.g.
+    `-c5`
+
+# OpenSSL on macOS
+
+```
+export LDFLAGS=-L/usr/local/opt/openssl/lib
+export CPPFLAGS=-I/usr/local/opt/openssl/include
+export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
+```
+
+# Patching android executables
+
+- Copy the appropriate directory from <https://github.com/DexPatcher/dexpatcher-gradle-samples>
+- If you see invalid character in resources error:
+<https://github.com/DexPatcher/dexpatcher-gradle/issues/24>
+- If starting in debug mode fails with error "Session 'app': Error Launching
+    activity"
+  - Start in debug mode and let it fail
+  - Goto "attach debugger to Android process" and select the application
+- If you see that certain classes already exits, have the name of the `package`
+  `AndroidManifest.xml` in `app/src/main/` different from what you have for
+  original `AndroidManifest.xml`
+- If the build fails due to 'aar' errors (can't reproduce the error messages
+    now), run one of the dexpatcher gradle tasks like `decodeApk`
+
+
+# Windows RE
+
+- Inno Setup extractor [InnoExtract](https://github.com/dscharrer/InnoExtract)
+
+# Firmware chrooting
+
+- Ref: <https://unix.stackexchange.com/a/222981>
+  
+  $ cp $(which qemu-arm-static) /mnt/usr/bin
+
+  $ chroot /mnt qemu-arm-static /bin/bash
+
+- You can activate the gdb server shim in Qemu using `QEMU_GBD=<port>` env var before
+  running any program. Ref: <https://unix.stackexchange.com/q/129366>
