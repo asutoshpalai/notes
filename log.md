@@ -19,6 +19,10 @@
 - "HowTo: Use Tor for all network traffic by default on Mac OS X"
 <https://maymay.net/blog/2013/02/20/howto-use-tor-for-all-network-traffic-by-default-on-mac-os-x/>
 - Poor man's SSH VPN <https://github.com/sshuttle/sshuttle>
+- CA cert signing fails to copy extensions:
+    <https://security.stackexchange.com/questions/150078/missing-x509-extensions-with-an-openssl-generated-certificate>
+- CA signing with random date: <https://github.com/wolfcw/libfaketime>. Doesn't
+    work on MacOS, can use Docker to get around.
 
 ### Usenet (apparently they still exist)
 
@@ -300,3 +304,51 @@ export PKG_CONFIG_PATH="/usr/local/opt/openssl/lib/pkgconfig"
 
 - You can activate the gdb server shim in Qemu using `QEMU_GBD=<port>` env var before
   running any program. Ref: <https://unix.stackexchange.com/q/129366>
+
+# Setting up Windows VM for gaming
+
+## GPU passthrough with single GPU
+- Make host kernel not use the GPU:
+  `GRUB_CMDLINE_LINUX_DEFAULT="quiet iommu=pt amd_iommu=on video=efifb:off""`
+      in  `/etc/default/grub`
+- Blacklist kernel drivers. It is necessary, otherwise AMD driver causes kernel
+    panics on host.
+- Added vendor IDs for `vfio-pci`.
+- Ref:
+    <https://blog.quindorian.org/2018/03/building-a-2u-amd-ryzen-server-proxmox-gpu-passthrough.html/>
+    and <https://pve.proxmox.com/wiki/Pci_passthrough>
+- To read: <https://github.com/joeknock90/Single-GPU-Passthrough>
+- Other helpful tools:
+  - <https://github.com/ystarnaud/amdmeminfo>
+  - <https://github.com/awilliam/rom-parser>
+
+## Making Xbox One S controller to work with wired connection
+- Blacklist the `xpad` driver, `modprobe -r` should work too.
+
+# Compiling nfs-ganesha (v3.0.3) on Ubuntu 18.04
+
+I needed this to support NFS for GlusterFS on Odroid HC2.
+
+- Install dependencies
+
+    $ apt install git cmake pkg-config libcap-dev libnfsidmap-dev dbus libacl1-dev ncurses-dev libkrb5-dev uuid-dev liburcu-dev bison flex
+
+- On Odroid I had to remove the FindPkg CMake library that was bundled for
+    `pkg-config` to function properly.
+
+    $ rm ./src/cmake/modules/FindPkgConfig.cmake
+
+- Create a build directory and run cmake
+
+    $ cmake -DUSE_FSAL_GLUSTER=ON -DCURSES_LIBRARY=/usr/lib64 -DCURSES_INCLUDE_PATH=/usr/include/ncurses -DCMAKE_BUILD_TYPE=Maintainer /root/nfs-ganesha/src/
+
+# Xpra
+
+I am trying to run Ubuntu 20.04 in a LXC container and access GUI apps remotely
+via xpra.
+
+- Works out of box (using the CLI) but has lower DPI.
+- Ref: <https://xpra.org/trac/wiki/DPI>, need to load Xdummy and FakeXinerama.
+- Adding FakeXinerama was easy.
+- Added the conf for Xdummy to `/etc/xpra/xpra.conf`, ref:
+    <https://xpra.org/trac/wiki/Xdummy>. X fails to start now.

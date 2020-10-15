@@ -14,6 +14,8 @@ Collection of notes on some random things I tinker with.
 
 - [android_wlan.md](android_wlan.md) Attempt at understanding the working of Wi-Fi module in my Moto G5 Plus.
 
+- [ubuntu_mbp.md](ubuntu_mbp.md) My experiments of running ubuntu on 2018 Macbook Pro.
+
 - [ideas.md](ideas.md) Some of the randoms ideads I had. (They are all available
   in public domain, will add a licence in some time. I would prefer if you just
   give me some credits.)
