@@ -352,3 +352,12 @@ via xpra.
 - Adding FakeXinerama was easy.
 - Added the conf for Xdummy to `/etc/xpra/xpra.conf`, ref:
     <https://xpra.org/trac/wiki/Xdummy>. X fails to start now.
+
+# OpenWRT on KVM (Proxmox)
+
+- Followed <https://www.jwtechtips.top/how-to-install-openwrt-in-proxmox/> to
+    install OpenWRT.
+  - Before I started the VM for the first time, I expaned the disk. This will
+      auto expand the overlay disk. 
+- After boot, edited `/etc/config/networks` to change `eth0` to `wan` & `dhcp`.
+- Edited `/etc/config/firewall` to allow ssh on wan.
