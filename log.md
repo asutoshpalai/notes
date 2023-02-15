@@ -99,9 +99,10 @@
 - 64-bit version of `rundll32.exe`: `%WinDir%\System32\rundll32.exe`
 - 32-bit version of `rundll32.exe`: `%WinDir%\SysWOW64\rundll32.exe`
 
-# Fixed text width writing with vim
-
-- <http://blog.ezyang.com/2010/03/vim-textwidth/>
+# Vim Tricks
+- Fixed text width writing with vim <http://blog.ezyang.com/2010/03/vim-textwidth/>
+- For C++ files and LSP using clangd, you can find the compile flags in the logs
+    of CMake.
 
 # Debugging PIE with Radare2
 - Reload with `ood`. 
@@ -357,7 +358,55 @@ via xpra.
 
 - Followed <https://www.jwtechtips.top/how-to-install-openwrt-in-proxmox/> to
     install OpenWRT.
-  - Before I started the VM for the first time, I expaned the disk. This will
+  - Before I started the VM for the first time, I expanded the disk. This will
       auto expand the overlay disk. 
 - After boot, edited `/etc/config/networks` to change `eth0` to `wan` & `dhcp`.
 - Edited `/etc/config/firewall` to allow ssh on wan.
+- Install `kmod-iwlwifi` and download `iwlwifi-cc-46` ucode to `/lib/firmware`
+to make the Intel AX200 WiFi card working (used snapshot version of  OpenWRT
+for have 5.2+ kernel).
+- Setup routed AP <https://openwrt.org/docs/guide-user/network/wifi/routedap>
+  - Install `hostapd`.
+  - In the line `config wifi-device 'wlan0'`, use the name of the actual
+  interface.
+- Install `luci-ssl` for web interface.
+- Followed <https://openwrt.org/docs/guide-user/services/tor/client> to set up
+tor. Connection rerouting was working, DNS failed.
+
+# Setting up Wifi Access Point that tunnels to another system
+
+The aim was to setup 2 devies which are connected by Wireguard (Tailgate). One
+of them will be a portable wifi hotspot which will tunnel all its traffic to
+the other device.
+
+- Bought 2 Odroid C4 devices and Odroid wifi doungles.
+- Setting up both the wifi doungles on the same system doesn't work because same
+    Realtek driver (which for Odroid doungles 8821cu) can't handle two differnt
+    devices. Ref: <https://github.com/morrownr/88x2bu/issues/73>
+- So, I bought another Wifi doungle labled AC650. After receiving it, I realized
+    that it also uses the same driver, 8821cu.
+
+    But one of the [comments](https://github.com/morrownr/88x2bu/issues/73#issuecomment-869078979)
+    mentioned in the above linked issue is to compile the
+    driver with differnt names so that kernel loads two different instances of
+    the same driver. That didn't work earlier as both the doungles had the same
+    device ID. But in this case, they had different device IDs.
+
+    So, I compiled 2 versions of the driver, by commenting out the different
+    device IDs in each for each doungles. That actually worked and I was able to
+    use both the doungles.
+- I setup one of the Odroid C4 as Tailscale [exit
+    node](https://tailscale.com/kb/1103/exit-nodes/).
+- On the other Odroid, I setup [comitup](http://davesteele.github.io/comitup/)
+    to help setup wifi connections in a new place without using any screen or
+    keyboard. With 2 wifi doungles on the same device, is setups an AP on one
+    and it automatically uses the other wifi doungle to connect to the WiFi
+    network. It forwards the traffic from the AP to the WiFi network
+    automatically.
+- Then I setup Tailscale on it and configured it to use the exit node to route
+    all the traffic. It worked well for connections originating from the Odroid
+    device but it didn't work for the AP traffic. The following iptables rule
+    fixed it. Then installed `iptables-persistent` to save it across reboot.
+    ```
+        $ iptables -t nat -A POSTROUTING -o tailscale0 -j MASQUERADE
+    ```
