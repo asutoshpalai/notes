@@ -362,11 +362,10 @@ via xpra.
       auto expand the overlay disk. 
 - After boot, edited `/etc/config/networks` to change `eth0` to `wan` & `dhcp`.
 - Edited `/etc/config/firewall` to allow ssh on wan.
-- Install `kmod-iwlwifi` and download `iwlwifi-cc-46` ucode to `/lib/firmware`
-to make the Intel AX200 WiFi card working (used snapshot version of  OpenWRT
-for have 5.2+ kernel).
+- Install `kmod-iwlwifi` and download `iwlwifi-cc-a0-72` ucode to `/lib/firmware`
+to make the Intel AX200 WiFi card working.
 - Setup routed AP <https://openwrt.org/docs/guide-user/network/wifi/routedap>
-  - Install `hostapd`.
+  - Install `wpad`.
   - In the line `config wifi-device 'wlan0'`, use the name of the actual
   interface.
 - Install `luci-ssl` for web interface.
