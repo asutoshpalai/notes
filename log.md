@@ -409,3 +409,9 @@ the other device.
     ```
         $ iptables -t nat -A POSTROUTING -o tailscale0 -j MASQUERADE
     ```
+
+# Setting up Nextcloud in a LXC container
+- Allow `features: nesting=1` in the conainter config to fix "/run/systemd/unit-root/proc: Permission denied"
+- Set `ProtectSystem=false` in `php-fpm.service` to allow writing of config
+    files. Maybe remove it after setup is done?
+- Map users to fix permission issues in the mounted bind path: https://pve.proxmox.com/wiki/Unprivileged_LXC_containers

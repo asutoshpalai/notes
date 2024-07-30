@@ -56,3 +56,66 @@ This is an automatic way, but I haven't been able to make it work.
       ```
       $ git grep -A 20 <func 1> | grep <func 2>
       ```
+
+## Plugin Development
+
+### Setup
+
+All the documents talk about the tight integration with Eclipse Java IDE. The
+following instructions are taken from
+<https://github.com/NationalSecurityAgency/ghidra/blob/master/GhidraBuild/EclipsePlugins/GhidraDev/GhidraDevPlugin/GhidraDev_README.html>.
+You can search online for "GhidraDev README" to find a rendered version.
+
+- Install Eclipse Java IDE
+- Open Ghidra, create/open a project and then open the Code Browser (just empty
+    is fine).
+- Open Window -> ScriptManager. Select any script (I chose HelloWorldPopup) and
+    click the button to edit it in Eclipse. It will automatically install the
+    GhidraDev Plugin. It might ask you to locate Eclipse installation first.
+
+
+### ABCL Plugin
+
+Aim is to start a swank(slynk) server from ABCL running in the JVM so that we
+can interact with Ghidra form Eclipse for scripting or analysis.
+
+- Create a new script in Ghidra's ScriptManager. Edit it Eclipse.
+- Add ABCL's jar file to the dependency for the project.
+- Start ABCL's instance from the script's `run()` method.
+    ```java
+    Interpreter interpreter = Interpreter.createInstance();
+    ```
+- Create a lisp file for init code that starts the Swank server. We also define
+    a function to save the GhidraScript instance to be used from common lisp
+    code.
+    ```lisp
+    (require :asdf)
+
+    (push #p"/Users/username/.emacs.d/elpa/sly-20221108.2234/slynk/" asdf:*central-registry*)
+    (push #p"/Users/username/eclipse-workspace/GhidraScripts/abcl-src-1.9.2/contrib/jss/" asdf:*central-registry*)
+
+    (print  asdf:*central-registry*)
+
+    (defun set-ghidra-script (ghidra-script)
+        (defparameter *ghidra-script* ghidra-script))
+
+    (asdf:load-system :slynk)
+    (asdf:load-system :jss)
+    (slynk:create-server :port 4008)
+    ```
+- Run the file from the instance we crated above.
+    ```
+    interpreter.eval("(load \"lispfunction.lisp\")");
+    ```
+- Call the lisp method that we defined to save the GhidraScript instance.
+    ```java
+    org.armedbear.lisp.Package defaultPackage = Packages.findPackage("CL-USER");
+    Symbol setGhidraScript = defaultPackage.findAccessibleSymbol("SET-GHIDRA-SCRIPT");
+    Function setGhidraScriptFunc = (Function) setGhidraScript.getSymbolFunction();
+    setGhidraScriptFunc.execute(new JavaObject(this));
+    ```
+- Run the script from Ghidra's script manager. If you use the debug button on
+    Eclipse, a new instance of Ghidra is started and you can add breakpoints in
+    the script.
+
+- Launch Emacs with SLIME (or SLY), and connect to the server started.
