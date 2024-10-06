@@ -119,3 +119,26 @@ can interact with Ghidra form Eclipse for scripting or analysis.
     the script.
 
 - Launch Emacs with SLIME (or SLY), and connect to the server started.
+
+
+#### Creating it as a module
+
+- In Eclipse menu, GhidraDev -> New -> Ghidra Module Project.
+- Change the Gradle version to at match Ghidra's min Gradel version at
+  `<GHIDRA_INSTALL_DIR>/Ghidra/application.properties`. (Maybe also have the min
+  java version for better compatibility).
+- Edit build.gradle, update "<GHIDRA_INSTALL_DIR>" and add ABCL as a dependency.
+  `implementation 'org.abcl:abcl:1.9.2'`.
+- Right click on the project, Configure -> Add Gradle Nature to activate Gradle
+  for the project.
+- Initialize the interpreter in `init()`. Maybe use `tool.execute` to not block
+  the UI thread.
+- Add code to detect if Quicklisp is installed. If not, download it to a temp
+  file, load it using `Interpreter.execute` and then install Quicklisp.
+  - Alternatively, add `abcl-contrib` as dependency. It comes with
+    `abcl-quicklisp`.
+- Use quicklisp to load `slynk` and start slynk on some port.
+
+## Concepts
+
+- Program: A binary that's being analysed.
